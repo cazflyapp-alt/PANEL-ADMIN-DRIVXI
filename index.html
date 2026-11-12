@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrativo | Drivxi</title>
+    <!-- ===== PWA: manifiesto, tema, iconos y registro del Service Worker ===== -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0E0E0E">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Drivxi Admin">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Drivxi">
+    <meta name="description" content="Panel Administrativo Drivxi - Centro de Control de Administración General">
+    <!-- ===== Metadatos para que al compartir el enlace en WhatsApp se vea el icono de la app (Open Graph + Twitter) ===== -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Drivxi">
+    <meta property="og:title" content="Panel Administrativo | Drivxi">
+    <meta property="og:description" content="Centro de Control - Administración General de Drivxi">
+    <meta property="og:url" content="https://cazflyapp-alt.github.io/PANEL-ADMIN-DRIVXI/">
+    <meta property="og:image" content="https://cazflyapp-alt.github.io/PANEL-ADMIN-DRIVXI/icon-512.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="Icono de la app Drivxi">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Panel Administrativo | Drivxi">
+    <meta name="twitter:description" content="Centro de Control - Administración General de Drivxi">
+    <meta name="twitter:image" content="https://cazflyapp-alt.github.io/PANEL-ADMIN-DRIVXI/icon-512.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SDK de Supabase -->
@@ -143,6 +169,38 @@
             </div>
             <div class="p-4 bg-gray-50 border-t border-gray-200 text-right">
                 <button onclick="cerrarModal()" class="bg-[#0E0E0E] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-gray-800 transition">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal / Popup de Instalación PWA (Android e iPhone) -->
+    <div id="install-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden flex items-end sm:items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden border-t-4 border-[#80B13D]">
+            <div class="p-4 bg-[#0E0E0E] text-white flex items-center space-x-3">
+                <img src="icon-192.png" alt="Icono de la app Drivxi" class="h-12 w-12 rounded-xl bg-white p-1 object-contain shrink-0">
+                <div class="border-l border-gray-700 pl-3">
+                    <h3 class="text-base font-bold tracking-wide">Instalar Drivxi</h3>
+                    <p class="text-xs text-gray-400">Lleva el Panel Administrativo a tu pantalla de inicio</p>
+                </div>
+                <button onclick="cerrarModalInstalacion()" class="ml-auto text-gray-400 hover:text-white text-lg font-bold px-2 py-1 rounded-lg">✕</button>
+            </div>
+            <div class="p-5 space-y-3">
+                <!-- Android / Chrome: instalación automática al presionar "Instalar" -->
+                <div id="install-android" class="hidden space-y-3">
+                    <p class="text-sm text-gray-600">Instala el panel como una aplicación nativa en tu Android, sin barras de navegador.</p>
+                    <button onclick="instalarApp()" class="w-full bg-[#80B13D] text-[#0E0E0E] font-bold py-2.5 rounded-lg text-sm hover:opacity-90 transition">
+                        📲 Instalar
+                    </button>
+                </div>
+                <!-- iPhone / iPad (iOS): instrucciones manuales -->
+                <div id="install-ios" class="hidden space-y-2 text-sm text-gray-600">
+                    <p>En tu iPhone abre este enlace en <span class="font-semibold">Safari</span>, toca el botón <span class="font-semibold">Compartir</span> <span class="inline-block bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 text-xs">⬆︎</span> y elige:</p>
+                    <p class="bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 font-semibold text-[#0E0E0E]">➕ Añadir a pantalla de inicio</p>
+                    <p class="text-xs text-gray-500">Después confirma tocando <span class="font-semibold">Añadir</span> arriba a la derecha.</p>
+                </div>
+                <button onclick="cerrarModalInstalacion()" class="w-full bg-[#0E0E0E] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                    Ahora no
+                </button>
             </div>
         </div>
     </div>
@@ -337,6 +395,76 @@
 
         cargarKPIs();
         cargarTabla('usuarios', false);
+    </script>
+
+    <script>
+        /* ============================================================
+           PWA - Registro del Service Worker + Popup de instalación
+           Android/Chrome: evento beforeinstallprompt (botón Instalar)
+           iPhone/iPad (iOS): instrucciones "Añadir a pantalla de inicio"
+           ============================================================ */
+        let deferredPrompt = null;
+
+        const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const yaInstalada =
+            (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+            navigator.standalone === true;
+
+        window.addEventListener('load', function () {
+            // Registrar el Service Worker (sw.js en la raíz del repositorio)
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(function (err) {
+                    console.warn('No se pudo registrar el Service Worker:', err);
+                });
+            }
+            // En iPhone/iPad no existe beforeinstallprompt: mostrar el popup con instrucciones
+            if (esIOS && !yaInstalada) {
+                mostrarModalInstalacion('ios');
+            }
+        });
+
+        // Android / Chrome: capturar el prompt de instalación del navegador
+        window.addEventListener('beforeinstallprompt', function (e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!yaInstalada) mostrarModalInstalacion('android');
+        });
+
+        window.addEventListener('appinstalled', function () {
+            deferredPrompt = null;
+            cerrarModalInstalacion();
+        });
+
+        function mostrarModalInstalacion(tipo) {
+            const modal = document.getElementById('install-modal');
+            if (!modal) return;
+            document.getElementById('install-android').classList.toggle('hidden', tipo !== 'android');
+            document.getElementById('install-ios').classList.toggle('hidden', tipo !== 'ios');
+            modal.classList.remove('hidden');
+        }
+
+        function cerrarModalInstalacion() {
+            const modal = document.getElementById('install-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function instalarApp() {
+            if (!deferredPrompt) { cerrarModalInstalacion(); return; }
+            deferredPrompt.prompt();
+            try { await deferredPrompt.userChoice; } catch (e) { /* el usuario canceló */ }
+            deferredPrompt = null;
+            cerrarModalInstalacion();
+        }
+
+        // Cerrar el popup al tocar el fondo oscuro
+        (function () {
+            const modal = document.getElementById('install-modal');
+            if (modal) {
+                modal.addEventListener('click', function (e) {
+                    if (e.target === modal) cerrarModalInstalacion();
+                });
+            }
+        })();
     </script>
 </body>
 </html>
