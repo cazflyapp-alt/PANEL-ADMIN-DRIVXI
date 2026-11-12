@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Administrativo | Bikar</title>
+    <title>Panel Administrativo | Drivxi</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SDK de Supabase -->
@@ -11,6 +11,7 @@
     <!-- Fuente Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
@@ -22,7 +23,7 @@
     <!-- Barra Superior Profesional -->
     <header class="bg-[#0E0E0E] text-white shadow-lg border-b-4 border-[#80B13D] px-6 py-4 flex justify-between items-center sticky top-0 z-20">
         <div class="flex items-center space-x-4">
-            <img src="https://i.imgur.com/gcYd3zg.png" alt="Logo Bikar" class="h-10 w-auto object-contain rounded">
+            <img src="https://i.imgur.com/gcYd3zg.png" alt="Logo Drivxi" class="h-10 w-auto object-contain rounded">
             <div class="border-l border-gray-700 pl-4">
                 <h1 class="text-lg font-bold tracking-wider uppercase text-white">Centro de Control</h1>
                 <p class="text-xs text-gray-400">Administración General - Drivxi</p>
@@ -35,67 +36,67 @@
         <!-- Sidebar de Navegación -->
         <aside class="w-full md:w-64 bg-[#0E0E0E] text-white p-4 space-y-1.5 border-r border-gray-800 shrink-0">
             <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2 mt-1">Operación Principal</p>
-            <button onclick="cargarTabla('usuarios')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-[#80B13D] text-[#0E0E0E]" id="btn-usuarios">
+            <button onclick="cargarTabla('usuarios', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-[#80B13D] text-[#0E0E0E]" id="btn-usuarios">
                 👤 Usuarios
             </button>
-            <button onclick="cargarTabla('conductores')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-conductores">
+            <button onclick="cargarTabla('conductores', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-conductores">
                 🚗 Conductores
             </button>
-            <button onclick="cargarTabla('pasajeros')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-pasajeros">
+            <button onclick="cargarTabla('pasajeros', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-pasajeros">
                 🧍 Pasajeros
             </button>
-            <button onclick="cargarTabla('viajes')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-viajes">
+            <button onclick="cargarTabla('viajes', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-viajes">
                 📍 Viajes
             </button>
-            <button onclick="cargarTabla('comercios')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-comercios">
+            <button onclick="cargarTabla('comercios', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-comercios">
                 🏪 Comercios
             </button>
 
             <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2 pt-4">Flota y Soporte</p>
-            <button onclick="cargarTabla('documentos_conductor')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-documentos_conductor">
+            <button onclick="cargarTabla('documentos_conductor', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-documentos_conductor">
                 📄 Documentos Conductor
             </button>
-            <button onclick="cargarTabla('vehiculos')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-vehiculos">
+            <button onclick="cargarTabla('vehiculos', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-vehiculos">
                 🚙 Vehículos
             </button>
-            <button onclick="cargarTabla('calificaciones')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-calificaciones">
+            <button onclick="cargarTabla('calificaciones', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-calificaciones">
                 ⭐ Calificaciones
             </button>
-            <button onclick="cargarTabla('mensajes_viaje')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-mensajes_viaje">
+            <button onclick="cargarTabla('mensajes_viaje', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-mensajes_viaje">
                 💬 Mensajes Viaje
             </button>
 
             <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2 pt-4">Sistema</p>
-            <button onclick="cargarTabla('politicas_aceptaciones')" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-politicas_aceptaciones">
+            <button onclick="cargarTabla('politicas_aceptaciones', true)" class="nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white" id="btn-politicas_aceptaciones">
                 🛡️ Políticas Aceptadas
             </button>
         </aside>
 
         <!-- Área de Contenido Principal -->
-        <main class="flex-grow p-6 max-w-full overflow-x-auto space-y-6">
+        <main class="flex-grow p-5 max-w-full overflow-x-auto space-y-4">
             
-            <!-- Tarjetas de Resumen (KPIs) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-[#80B13D]">
-                    <p class="text-xs font-semibold text-gray-500 uppercase">Total Usuarios</p>
-                    <p id="kpi-usuarios" class="text-2xl font-bold text-[#0E0E0E] mt-1">...</p>
+            <!-- Tarjetas de Resumen Compactas en una sola fila -->
+            <div class="grid grid-cols-4 gap-2.5 overflow-x-auto">
+                <div class="bg-white px-3 py-2.5 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-[#80B13D] min-w-[110px]">
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase truncate">Total Usuarios</p>
+                    <p id="kpi-usuarios" class="text-lg font-bold text-[#0E0E0E] leading-tight mt-0.5">...</p>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-[#0E0E0E]">
-                    <p class="text-xs font-semibold text-gray-500 uppercase">Conductores</p>
-                    <p id="kpi-conductores" class="text-2xl font-bold text-[#0E0E0E] mt-1">...</p>
+                <div class="bg-white px-3 py-2.5 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-[#0E0E0E] min-w-[110px]">
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase truncate">Conductores</p>
+                    <p id="kpi-conductores" class="text-lg font-bold text-[#0E0E0E] leading-tight mt-0.5">...</p>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-[#80B13D]">
-                    <p class="text-xs font-semibold text-gray-500 uppercase">Viajes Registrados</p>
-                    <p id="kpi-viajes" class="text-2xl font-bold text-[#0E0E0E] mt-1">...</p>
+                <div class="bg-white px-3 py-2.5 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-[#80B13D] min-w-[110px]">
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase truncate">Viajes Registrados</p>
+                    <p id="kpi-viajes" class="text-lg font-bold text-[#0E0E0E] leading-tight mt-0.5">...</p>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 border-l-4 border-l-[#0E0E0E]">
-                    <p class="text-xs font-semibold text-gray-500 uppercase">Comercios</p>
-                    <p id="kpi-comercios" class="text-2xl font-bold text-[#0E0E0E] mt-1">...</p>
+                <div class="bg-white px-3 py-2.5 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-[#0E0E0E] min-w-[110px]">
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase truncate">Comercios</p>
+                    <p id="kpi-comercios" class="text-lg font-bold text-[#0E0E0E] leading-tight mt-0.5">...</p>
                 </div>
             </div>
 
             <!-- Contenedor de la Tabla -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div id="table-section" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden scroll-mt-20">
                 <div class="p-5 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50">
                     <div>
                         <h2 id="table-title" class="text-lg font-bold text-[#0E0E0E] capitalize">Usuarios</h2>
@@ -106,7 +107,7 @@
                         <input type="text" id="search-input" onkeyup="filtrarTabla()" placeholder="Buscar en esta tabla..." 
                             class="text-sm border border-gray-300 rounded-lg px-3 py-1.5 w-full sm:w-64 focus:outline-none focus:border-[#80B13D]">
                         
-                        <button onclick="cargarTabla(tablaActual); cargarKPIs();" class="text-xs bg-[#0E0E0E] text-white px-3.5 py-2 rounded-lg hover:bg-gray-800 transition shrink-0 font-medium">
+                        <button onclick="cargarTabla(tablaActual, false); cargarKPIs();" class="text-xs bg-[#0E0E0E] text-white px-3.5 py-2 rounded-lg hover:bg-gray-800 transition shrink-0 font-medium">
                             🔄 Actualizar
                         </button>
                     </div>
@@ -164,10 +165,17 @@
             }
         }
 
-        async function cargarTabla(nombreTabla) {
+        async function cargarTabla(nombreTabla, hacerScroll = false) {
             tablaActual = nombreTabla;
             document.getElementById('search-input').value = '';
             
+            if (hacerScroll) {
+                const seccionTabla = document.getElementById('table-section');
+                if (seccionTabla) {
+                    seccionTabla.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = 'nav-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white';
             });
@@ -188,12 +196,10 @@
             try {
                 let data = [];
                 
-                // Caso especial para Viajes: enriquecer con nombres y placas, y filtrar columnas de reseñas/calificaciones
                 if (nombreTabla === 'viajes') {
                     const { data: viajesData, error: errViajes } = await _supabase.from('viajes').select('*').order('id', { ascending: false }).limit(100);
                     if (errViajes) throw errViajes;
 
-                    // Consultar tablas relacionadas para mapear nombres y placas
                     const [resPasajeros, resConductores, resUsuarios, resDocs] = await Promise.all([
                         _supabase.from('pasajeros').select('id, usuario_id'),
                         _supabase.from('conductores').select('id, usuario_id'),
@@ -221,7 +227,6 @@
                             placaVehiculo = mapPlacas.get(v.conductor_id) || 'N/D';
                         }
 
-                        // Limpiar columnas de reseñas y calificaciones del conductor en viajes
                         let clon = { ...v };
                         delete clon.calificacion_conductor;
                         delete clon.resena_pasajero;
@@ -331,7 +336,7 @@
         }
 
         cargarKPIs();
-        cargarTabla('usuarios');
+        cargarTabla('usuarios', false);
     </script>
 </body>
 </html>
